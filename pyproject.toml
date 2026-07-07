@@ -1,0 +1,101 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "turkish-asr-eval"
+version = "0.1.0"
+description = "CLI evaluation harness for Turkish ASR models across multiple backends."
+readme = "README.md"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+  "datasets==4.6.1",
+  "evaluate==0.4.1",
+  "jiwer==3.1.0",
+  "numpy==1.26.4",
+  "soundfile==0.13.1",
+  "tqdm==4.67.1",
+]
+
+[project.optional-dependencies]
+faster-whisper = [
+  "ctranslate2==4.6.2",
+  "faster-whisper==1.1.1",
+  "nvidia-cublas-cu12==12.8.4.1",
+  "nvidia-cuda-runtime-cu12==12.8.90",
+  "nvidia-cudnn-cu12==9.10.2.21",
+]
+omnilingual = [
+  "fairseq2==0.6",
+  "omnilingual-asr==0.2.0",
+  "torch==2.8.0",
+  "torchaudio==2.8.0",
+]
+nemo = [
+  "nemo_toolkit[asr] @ git+https://github.com/NVIDIA/NeMo.git@cfeb8a59962dd0084261cac8685671abac4e7e63",
+  "torch==2.8.0",
+  "torchaudio==2.8.0",
+  "torchvision==0.23.0",
+]
+all = [
+  "ctranslate2==4.6.2",
+  "faster-whisper==1.1.1",
+  "fairseq2==0.6",
+  "nemo_toolkit[asr] @ git+https://github.com/NVIDIA/NeMo.git@cfeb8a59962dd0084261cac8685671abac4e7e63",
+  "omnilingual-asr==0.2.0",
+  "nvidia-cublas-cu12==12.8.4.1",
+  "nvidia-cuda-runtime-cu12==12.8.90",
+  "nvidia-cudnn-cu12==9.10.2.21",
+  "torch==2.8.0",
+  "torchaudio==2.8.0",
+  "torchvision==0.23.0",
+]
+dev = [
+  "pytest==8.3.5",
+  "ty==0.0.56",
+]
+
+[dependency-groups]
+dev = [
+  "pytest==8.3.5",
+  "ty==0.0.56",
+]
+
+[tool.uv]
+conflicts = [
+  [
+    { extra = "all" },
+    { extra = "faster-whisper" },
+  ],
+  [
+    { extra = "all" },
+    { extra = "omnilingual" },
+  ],
+  [
+    { extra = "all" },
+    { extra = "nemo" },
+  ],
+]
+
+[project.scripts]
+evaluate-model = "turkish_asr_eval.cli:main"
+
+[tool.ty.environment]
+python = ".venv"
+python-version = "3.10"
+
+[tool.ty.analysis]
+allowed-unresolved-imports = [
+  "fairseq2.**",
+  "faster_whisper",
+  "nemo.**",
+  "omnilingual_asr.**",
+  "torch",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
