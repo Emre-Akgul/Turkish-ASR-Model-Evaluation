@@ -10,7 +10,7 @@ import soundfile as sf
 
 from turkish_asr_eval.engines.base import ASREngine
 
-TURKISH_TARGET_LANG = "tr-TR"
+TURKISH_LANGUAGE_CODE = "tr-TR"
 
 
 class NemoEngine(ASREngine):
@@ -22,7 +22,7 @@ class NemoEngine(ASREngine):
             self._model = nemo_asr.models.ASRModel.from_pretrained(self.model)
 
         if hasattr(self._model, "set_inference_prompt"):
-            self._model.set_inference_prompt(TURKISH_TARGET_LANG)
+            self._model.set_inference_prompt(TURKISH_LANGUAGE_CODE)
 
     def transcribe(self, audio: Any) -> str:
         if isinstance(audio, dict) and "path" in audio:
@@ -34,7 +34,7 @@ class NemoEngine(ASREngine):
             )
 
         audio = self._normalize_audio(audio)
-        result = self._model.transcribe([audio], target_lang=TURKISH_TARGET_LANG)
+        result = self._model.transcribe([audio], target_lang=TURKISH_LANGUAGE_CODE)
         if isinstance(result, (list, tuple)) and result:
             first = result[0]
             if isinstance(first, str):

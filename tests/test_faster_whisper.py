@@ -40,3 +40,26 @@ def test_faster_whisper_passes_cuda_options(monkeypatch):
         "device": "cuda",
         "compute_type": "float16",
     }
+
+
+def test_faster_whisper_transcribes_with_turkish_language():
+    captured = {}
+
+    class FakeSegment:
+        text = " merhaba "
+
+    class FakeModel:
+        def transcribe(self, audio, **kwargs):
+            captured["audio"] = audio
+            captured.update(kwargs)
+            return [FakeSegment()], None
+
+    engine = FasterWhisperEngine("small")
+    engine._model = FakeModel()
+
+    assert engine.transcribe([0.0, 0.1]) == "merhaba"
+    assert captured == {
+        "audio": [0.0, 0.1],
+        "language": "tr",
+        "task": "transcribe",
+    }

@@ -9,13 +9,14 @@ import soundfile as sf
 
 from turkish_asr_eval.engines.base import ASREngine
 
+TURKISH_LANGUAGE_CODE = "tr"
 
 class FasterWhisperEngine(ASREngine):
     def load(self) -> None:
         device = str(self.options.get("device") or "cpu")
         compute_type = str(self.options.get("compute_type") or "int8")
 
-        self._model = WhisperModel(
+        self._model: Any = WhisperModel(
             self.model,
             device=device,
             compute_type=compute_type,
@@ -23,7 +24,11 @@ class FasterWhisperEngine(ASREngine):
 
     def transcribe(self, audio: Any) -> str:
         audio = self._normalize_audio(audio)
-        segments, _info = self._model.transcribe(audio)
+        segments, _info = self._model.transcribe(
+            audio,
+            language=TURKISH_LANGUAGE_CODE,
+            task="transcribe",
+        )
         return " ".join(segment.text.strip() for segment in segments).strip()
 
     def _normalize_audio(self, audio: Any) -> Any:
