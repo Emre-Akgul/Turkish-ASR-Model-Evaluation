@@ -1,5 +1,9 @@
 # Turkish ASR Model Evaluation
 
+[![Turkish ASR Leaderboard](Leaderboard.png)](https://huggingface.co/spaces/EmreAkgul/Turkish-transcription-leaderboard)
+
+[Open the live Turkish ASR leaderboard](https://huggingface.co/spaces/EmreAkgul/Turkish-transcription-leaderboard)
+
 Evaluate ASR models with a common CLI:
 
 ```bash
